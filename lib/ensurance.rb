@@ -10,8 +10,8 @@ module Ensurance
 
   class_methods do
     def ensure_by(*args)
-      @_ensure_by ||= [:id]
-      @_ensure_by += [args].flatten
+      @_additional_ensure_by = args
+      @_ensure_by = nil
     end
 
     def ensure(thing = nil)
@@ -28,7 +28,7 @@ module Ensurance
       end
       found = nil
 
-      @_ensure_by ||= [:id]
+      @_ensure_by ||= [self.primary_key, @_additional_ensure_by].flatten.compact.uniq
       @_ensure_by.each do |ensure_field|
         value = thing.try(:fetch, ensure_field.to_sym, nil) || thing.try(:fetch, ensure_field.to_s, nil) || thing
         found = self.find_by(ensure_field => value)

@@ -7,7 +7,7 @@ class TestRecord < ActiveRecord::Base
   include Ensurance
   include GlobalID::Identification
 
-  ensure_by [:id, :parent_type]
+  ensure_by :parent_type
 end
 
 RSpec.describe Ensurance do
@@ -54,8 +54,9 @@ RSpec.describe Ensurance do
   end
 
   it "ensures by record_id" do
+    puts ">> #{TestRecord.primary_key}"
     value = 3
-    expect(TestRecord.ensure(3)).to be_a(TestRecord)
+    expect(TestRecord.ensure(value)).to be_a(TestRecord)
   end
 
   it "ensures by full_record" do
