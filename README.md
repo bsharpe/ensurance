@@ -1,8 +1,21 @@
 # Ensurance
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/ensurance`. To experiment with that code, run `bin/console` for an interactive prompt.
+Allows you to ensure you have the class you expect... it's similar to
 
-TODO: Delete this and the text above, and describe your gem
+```
+result = value.is_a?(Person) ? value : Person.find(value)
+```
+
+You can add fields to "ensure_by" (:id is included always)
+e.g.
+
+ if you add `ensure_by :token` to the User class
+  User.ensure(<UserObject>) works
+  User.ensure(:user_id) works
+  User.ensure(:token) works
+
+ .ensure() returns nil if the record is not found
+ .ensure!() throws an exception if the record is not found
 
 ## Installation
 
@@ -16,23 +29,67 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install ensurance
-
 ## Usage
 
-TODO: Write usage instructions here
+In your Rails app... `include Ensurance::ActiveRecord` either in specific models or `ApplicationRecord` to cover all your models.
 
-## Development
+It's really handy for service objects or Jobs that you want to call from the console to try out.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```
+class SomeServiceClass
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+  def perform(user)
+    user = User.ensure(user)
+    # do something constructive here
+  end
+end
+```
+
+In this way you can call it with a User object, or a user `id` and it works just the same.
+
+Also adds ensurance features to `Hash`, `Time`, and `Date`
+
+```
+Time.ensure(Date.today) -> Date.today.beginning_of_day
+Time.ensure(1509556285) -> 2017-11-01 11:11:25 -0600
+Time.ensure("1509556285") -> 2017-11-01 11:11:25 -0600
+Time.ensure(DateTime.now) -> DateTime.now.to_time
+Time.ensure(nil) -> nil
+Time.ensure(1..4) -> ArgumentError "Unhandled Type for Time to ensure: Range"
+
+Date.ensure(Date.today) -> Date.today
+Date.ensure(nil) -> nil
+Date.ensure(1509556285) -> 2017-11-01
+
+Hash.ensure(<aHash>) -> <aHash>
+Hash.ensure(<json_string>) -> Hash
+Hash.ensure(nil) -> nil
+Hash.ensure(<an array>) -> <an array>.to_h
+```
+
+### ActiveRecord
+
+You can specify another field or fields to ensure by doing the following:
+
+```
+class User < ApplicationRecord
+  include Ensurance
+
+  ensure_by :token
+end
+
+User.ensure(1) == User.find(1)
+User.ensure(<a user record>) -> <a user record>
+User.ensure(<globalid>) == GlobalID::Locator.locate(<globalid>)
+User.ensure(<globalid string>) == GlobalID::Locator.locate(<globalid string>)
+User.ensure(<some token>) == User.where(token: <some token>).first
+User.ensure(nil) -> nil
+User.ensuer!(nil) -> ActiveRecord::RecordNotFound
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/ensurance.
+Bug reports and pull requests are welcome on GitHub at https://github.com/bsharpe/ensurance.
 
 ## License
 

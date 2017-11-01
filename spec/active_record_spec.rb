@@ -1,18 +1,16 @@
-require 'ensurance/date'
 require 'active_record'
 require 'globalid'
-require 'awesome_print'
 
 GlobalID.app = :test
 
 class TestRecord < ActiveRecord::Base
-  include Ensurance::ActiveRecord
+  include Ensurance
   include GlobalID::Identification
 
   ensure_by [:id, :parent_type]
 end
 
-RSpec.describe Ensurance::ActiveRecord do
+RSpec.describe Ensurance do
   before(:all) do
     # Setup tables in sqlite mem
     if defined?(ActiveRecord::VERSION) &&
@@ -85,6 +83,11 @@ RSpec.describe Ensurance::ActiveRecord do
     result = TestRecord.ensure(value)
     expect(result).to be_a(TestRecord)
     expect(result.parent_type).to eq(value)
+  end
+
+  it "raises exception if record not found when calling ensure!" do
+    value = "z"
+    expect{ TestRecord.ensure!(value) }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
 
