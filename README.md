@@ -36,8 +36,12 @@ In your Rails app... `include Ensurance` either in specific models or `Applicati
 It's really handy for service objects or Jobs that you want to call from the console to try out.
 
 ```
-class SomeServiceClass
+class User < ApplicationRecord
+  include Ensurance
+end
 
+
+class SomeServiceClass
   def perform(user)
     user = User.ensure(user)
     # do something constructive here
