@@ -1,6 +1,7 @@
+require 'active_support/core_ext/date'
 
 module Ensurance
-  class Date
+  module Date
     FORMATS = %w|%m/%d/%Y %Y/%m/%d|.freeze
     def self.ensure(thing)
       case thing.class.name
@@ -40,3 +41,5 @@ module Ensurance
     end
   end
 end
+
+::Date.include Ensurance::Date

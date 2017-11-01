@@ -1,5 +1,8 @@
+require 'active_support/core_ext/hash'
+require 'json'
+
 module Ensurance
-  class Hash
+  module Hash
     def self.ensure(thing)
       case thing.class.name
       when "Hash","HashWithIndifferentAccess"
@@ -22,3 +25,5 @@ module Ensurance
     end
   end
 end
+
+::Hash.include Ensurance::Hash

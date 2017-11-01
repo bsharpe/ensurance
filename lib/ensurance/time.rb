@@ -1,5 +1,7 @@
+require 'active_support/core_ext/time'
+
 module Ensurance
-  class Time
+  module Time
     def self.ensure(thing)
       case thing.class.name
       when "NilClass"
@@ -28,3 +30,5 @@ module Ensurance
     end
   end
 end
+
+::Time.include Ensurance::Time
