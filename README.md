@@ -31,7 +31,7 @@ And then execute:
 
 ## Usage
 
-In your Rails app... `include Ensurance::ActiveRecord` either in specific models or `ApplicationRecord` to cover all your models.
+In your Rails app... `include Ensurance` either in specific models or `ApplicationRecord` to cover all your models.
 
 It's really handy for service objects or Jobs that you want to call from the console to try out.
 
@@ -75,7 +75,7 @@ You can specify another field or fields to ensure by doing the following:
 class User < ApplicationRecord
   include Ensurance
 
-  ensure_by :token
+  ensure_by :token    <- totally optional
 end
 
 User.ensure(1) == User.find(1)
