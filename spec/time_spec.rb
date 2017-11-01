@@ -1,6 +1,6 @@
-require 'ensurance/time'
+require 'ensurance/time_ensure'
 
-RSpec.describe Ensurance::Time do
+RSpec.describe ::Time do
   it "returns nil for nil" do
     expect(described_class.ensure(nil)).to eq(nil)
   end

@@ -1,9 +1,9 @@
 require "ensurance/version"
 require 'active_support'
 
-require 'ensurance/date'
-require 'ensurance/time'
-require 'ensurance/hash'
+require 'ensurance/date_ensure'
+require 'ensurance/time_ensure'
+require 'ensurance/hash_ensure'
 
 module Ensurance
   extend ActiveSupport::Concern

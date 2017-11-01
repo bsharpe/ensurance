@@ -1,6 +1,6 @@
-require 'ensurance/date'
+require 'ensurance/date_ensure'
 
-RSpec.describe Ensurance::Date do
+RSpec.describe ::Date do
   it "returns nil for nil" do
     expect(described_class.ensure(nil)).to eq(nil)
   end

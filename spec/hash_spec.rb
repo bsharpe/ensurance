@@ -1,7 +1,6 @@
-require 'ensurance/hash'
+require 'ensurance/hash_ensure'
 
-RSpec.describe Ensurance::Hash do
-
+RSpec.describe ::Hash do
   it "returns nil for nil" do
     expect(described_class.ensure(nil)).to eq(nil)
   end
