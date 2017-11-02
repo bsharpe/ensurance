@@ -18,6 +18,8 @@ module Ensurance
           JSON.parse(thing)
         when "NilClass"
           nil
+        when "ActionController::UnfilteredParameters", "ActionController::Parameters"
+          thing.permit!.to_h
         else
           if thing.respond_to?(:to_h)
             begin
