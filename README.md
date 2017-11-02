@@ -6,7 +6,7 @@ Allows you to ensure you have the class you expect... it's similar to
 result = value.is_a?(Person) ? value : Person.find(value)
 ```
 
-You can add fields to "ensure_by" (:id is included always)
+You can add fields to "ensure_by" (`self.primary_key` is the default)
 e.g.
 
  if you add `ensure_by :token` to the User class

@@ -7,7 +7,7 @@ class TestRecord < ActiveRecord::Base
   include Ensurance
   include GlobalID::Identification
 
-  ensure_by :parent_type
+  ensure_by :parent_type, :id
 end
 
 RSpec.describe Ensurance do
@@ -54,7 +54,6 @@ RSpec.describe Ensurance do
   end
 
   it "ensures by record_id" do
-    puts ">> #{TestRecord.primary_key}"
     value = 3
     expect(TestRecord.ensure(value)).to be_a(TestRecord)
   end
@@ -74,9 +73,25 @@ RSpec.describe Ensurance do
     expect(TestRecord.ensure(value)).to be_a(TestRecord)
   end
 
-  it "ensures by a hash" do
+  it "ensures by a VALID hash" do
     value = { id: 2 }
     expect(TestRecord.ensure(value)).to be_a(TestRecord)
+    value = { "id" => 2 }
+    expect(TestRecord.ensure(value)).to be_a(TestRecord)
+    value = { "parent_type" => "b" }
+    expect(TestRecord.ensure(value)).to be_a(TestRecord)
+    value = { parent_type: "b"}
+    expect(TestRecord.ensure(value)).to be_a(TestRecord)
+  end
+
+  it "fails to ensure with an INVALID hash" do
+    value = { a: 2 }
+    expect(TestRecord.ensure(value)).to be_nil
+  end
+
+  it "fails to ensure with an array" do
+    value = [1,2,3]
+    expect{TestRecord.ensure(value)}.to raise_error(::ArgumentError)
   end
 
   it "ensures by a parent_type" do

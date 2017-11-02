@@ -38,5 +38,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "activerecord", '>= 3', '< 6'
   spec.add_development_dependency "globalid", '>= 0.3.6', '< 2'
   spec.add_development_dependency "sqlite3", '>= 1.3.0', '< 4'
+  spec.add_development_dependency "awesome_print", '>= 1.0', '< 2'
 end
 
