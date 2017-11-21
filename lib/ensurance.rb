@@ -45,7 +45,7 @@ module Ensurance
 
     def ensure!(thing = nil)
       result = self.ensure(thing)
-      raise ::ActiveRecord::RecordNotFound unless result
+      raise ::ActiveRecord::RecordNotFound.new("#{self}[#{thing ? thing : 'nil'}]") unless result
       result
     end
 
