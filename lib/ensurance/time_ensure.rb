@@ -35,6 +35,15 @@ module Ensurance
           end
         end
       end
+
+      def ensure!(thing)
+        def ensure!(thing)
+          result = self.ensure(thing)
+          raise ArgumentError, "Cannot Time.ensure(#{thing})" unless result
+          result
+        end
+      end
+
     end
 
   end

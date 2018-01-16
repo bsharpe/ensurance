@@ -32,6 +32,12 @@ module Ensurance
           end
         end
       end
+
+      def ensure!(thing)
+        result = self.ensure(thing)
+        raise ArgumentError, "Cannot Hash.ensure(#{thing})" unless result
+        result
+      end
     end
   end
 end
