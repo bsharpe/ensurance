@@ -16,36 +16,42 @@ module Ensurance
 
     def ensure(thing = nil)
       return nil unless thing.present?
-      found = nil
 
       if thing.is_a?(self)
         return thing
-      elsif thing.is_a?(Array)
-        raise ArgumentError.new("Cannot Ensure #{self.name} with an Array: #{thing.inspect}")
       elsif thing.is_a?(GlobalID)
         return GlobalID::Locator.locate(thing)
       elsif thing.is_a?(Hash) && thing['_aj_globalid'] && (found = GlobalID::Locator.locate(thing['_aj_globalid']))
         return found
-      elsif thing.is_a?(String) && found = GlobalID::Locator.locate(thing)
+      elsif thing.is_a?(String) && (found = GlobalID::Locator.locate(thing))
         return found
       end
 
       @_ensure_by ||= [@_additional_ensure_by || self.primary_key].flatten.compact.uniq
-      @_ensure_by.each do |ensure_field|
-        value = thing
-        if thing.is_a?(Hash)
-          value = thing.fetch(ensure_field.to_sym, nil) || thing.fetch(ensure_field.to_s, nil)
-        end
-        found = self.find_by(ensure_field => value) if value.present? && !value.is_a?(Hash)
-        break if found.is_a?(self)
-      end
 
-      found
+      found = []
+      things = Array(thing)
+      things.each do |thing|
+        record = nil
+        @_ensure_by.each do |ensure_field|
+          value = thing
+          if thing.is_a?(Hash)
+            value = thing.fetch(ensure_field.to_sym, nil) || thing.fetch(ensure_field.to_s, nil)
+          end
+          record = find_by(ensure_field => value) if value.present? && !value.is_a?(Hash)
+          break if record.is_a?(self)
+        end
+        found << record
+      end
+      found.compact!
+
+      thing.is_a?(Array) ? found : found.first
     end
 
     def ensure!(thing = nil)
+      return nil unless thing.present?
       result = self.ensure(thing)
-      raise ::ActiveRecord::RecordNotFound.new("#{self}[#{thing ? thing : 'nil'}]") unless result
+      raise ::ActiveRecord::RecordNotFound.new("#{self} not found") unless result
       result
     end
 

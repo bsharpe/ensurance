@@ -88,7 +88,8 @@ User.ensure(<globalid>) == GlobalID::Locator.locate(<globalid>)
 User.ensure(<globalid string>) == GlobalID::Locator.locate(<globalid string>)
 User.ensure(<some token>) == User.where(token: <some token>).first
 User.ensure(nil) -> nil
-User.ensuer!(nil) -> ActiveRecord::RecordNotFound
+User.ensure!(nil) -> nil
+User.ensure!(<unknown_id>) -> ActiveRecord::RecordNotFound
 ```
 
 ## Contributing
