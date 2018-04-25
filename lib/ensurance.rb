@@ -38,12 +38,17 @@ module Ensurance
           if thing.is_a?(Hash)
             value = thing.fetch(ensure_field.to_sym, nil) || thing.fetch(ensure_field.to_s, nil)
           end
-          record = find_by(ensure_field => value) if value.present? && !value.is_a?(Hash)
+          if ensure_field.to_sym == :id
+            record = find(value)
+          else
+            record = find_by(ensure_field => value) if value.present? && !value.is_a?(Hash)
+          end
           break if record.is_a?(self)
         end
         found << record
       end
       found.compact!
+
 
       thing.is_a?(Array) ? found : found.first
     end
