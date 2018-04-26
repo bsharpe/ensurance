@@ -39,7 +39,11 @@ module Ensurance
             value = thing.fetch(ensure_field.to_sym, nil) || thing.fetch(ensure_field.to_s, nil)
           end
           if ensure_field.to_sym == :id
-            record = find(value)
+            begin
+              record = find(value)
+            rescue ActiveRecord::RecordNotFound
+              nil
+            end
           else
             record = find_by(ensure_field => value) if value.present? && !value.is_a?(Hash)
           end
