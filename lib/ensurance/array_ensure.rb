@@ -13,8 +13,14 @@ module Ensurance
         case thing.class.name
         when 'NilClass'
           nil
+        when 'Hash'
+          thing.to_a
         when 'String'
-          thing.split(',')
+          begin
+            JSON.parse(thing).to_a
+          rescue JSON::ParserError
+            thing.split(',')
+          end
         else
           Array(thing)
         end
