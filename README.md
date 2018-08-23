@@ -60,10 +60,15 @@ Time.ensure(1509556285) -> 2017-11-01 11:11:25 -0600
 Time.ensure("1509556285") -> 2017-11-01 11:11:25 -0600
 Time.ensure(DateTime.now) -> DateTime.now.to_time
 Time.ensure(1..4) -> ArgumentError "Unhandled Type for Time to ensure: Range"
+Time.ensure(Time.now.to_s) -> Time.now [uses Time.parse()]
+Time.ensure(Time.now.iso8601) -> Time.now [uses Time.parse()]
 
 Date.ensure(nil) -> nil
 Date.ensure(Date.today) -> Date.today
 Date.ensure(1509556285) -> 2017-11-01
+Date.ensure("1509556285") -> 2017-11-01
+Date.ensure("2017-11-01") -> 2017-11-01 [uses Date.parse()]
+Date.ensure("11/01/2017") -> 2017-11-01 [uses Date.parse()]
 
 Hash.ensure(nil) -> nil
 Hash.ensure(<aHash>) -> <aHash>
