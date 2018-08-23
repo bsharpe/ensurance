@@ -69,6 +69,12 @@ Hash.ensure(<aHash>) -> <aHash>
 Hash.ensure(<json_string>) -> Hash
 Hash.ensure(nil) -> nil
 Hash.ensure(<an array>) -> <an array>.to_h
+
+Array.ensure(nil) -> nil
+Array.ensure([]) -> []
+Array.ensure("1,2,4") -> ["1","2","4"]
+Array.ensure("[1,2,4]") -> [1,2,4]  (JSON string)
+Array.ensure({a:1, b:2}) -> [[:a, 1], [:b, 2]]
 ```
 
 ### ActiveRecord
@@ -79,11 +85,12 @@ You can specify another field or fields to ensure by doing the following:
 class User < ApplicationRecord
   include Ensurance
 
-  ensure_by :token    <- totally optional
+  ensure_by :id, :token    <- totally optional (:id is the default)
 end
 
-User.ensure(1) == User.find(1)
-User.ensure(<a user record>) -> <a user record>
+User.ensure!(1) == User.find(1)
+User.ensure(1) == User.find_by_id(1)
+User.ensure(<a user record>) -> <a user record> (nothing happens)
 User.ensure(<globalid>) == GlobalID::Locator.locate(<globalid>)
 User.ensure(<globalid string>) == GlobalID::Locator.locate(<globalid string>)
 User.ensure(<some token>) == User.where(token: <some token>).first
