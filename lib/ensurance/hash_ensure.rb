@@ -12,23 +12,23 @@ module Ensurance
     module ClassMethods
       def ensure(thing)
         case thing.class.name
-        when "Hash","HashWithIndifferentAccess"
+        when 'Hash', 'HashWithIndifferentAccess'
           thing
-        when "String"
+        when 'String'
           JSON.parse(thing)
-        when "NilClass"
+        when 'NilClass'
           nil
-        when "ActionController::UnfilteredParameters", "ActionController::Parameters"
+        when 'ActionController::UnfilteredParameters', 'ActionController::Parameters'
           thing.permit!.to_h
         else
           if thing.respond_to?(:to_h)
             begin
               thing.to_h
             rescue TypeError
-              raise ArgumentError.new("Unhandled Type for Hash to ensure: #{thing.class}")
+              raise ArgumentError, "Unhandled Type for Hash to ensure: #{thing.class}"
             end
           else
-            raise ArgumentError.new("Unhandled Type for Hash to ensure: #{thing.class}")
+            raise ArgumentError, "Unhandled Type for Hash to ensure: #{thing.class}"
           end
         end
       end
@@ -42,4 +42,4 @@ module Ensurance
   end
 end
 
-::Hash.prepend( Ensurance::HashEnsure )
+::Hash.prepend(Ensurance::HashEnsure)

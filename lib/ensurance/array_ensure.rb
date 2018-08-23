@@ -11,9 +11,9 @@ module Ensurance
     module ClassMethods
       def ensure(thing)
         case thing.class.name
-        when "NilClass"
+        when 'NilClass'
           nil
-        when "String"
+        when 'String'
           thing.split(',')
         else
           Array(thing)
@@ -22,7 +22,7 @@ module Ensurance
 
       def ensure!(thing)
         result = self.ensure(thing)
-        raise ArgumentError, "Cannot Array.ensure(#{thing ? thing : 'nil'})" unless result
+        raise ArgumentError, "Cannot Array.ensure(#{thing || 'nil'})" unless result
         result
       end
     end

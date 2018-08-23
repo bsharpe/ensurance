@@ -1,4 +1,4 @@
-require "ensurance/version"
+require 'ensurance/version'
 require 'active_support'
 
 require 'ensurance/date_ensure'
@@ -28,7 +28,7 @@ module Ensurance
         return found
       end
 
-      @_ensure_by ||= [@_additional_ensure_by || self.primary_key].flatten.compact.uniq
+      @_ensure_by ||= [@_additional_ensure_by || primary_key].flatten.compact.uniq
 
       found = []
       things = [thing].flatten
@@ -60,9 +60,8 @@ module Ensurance
     def ensure!(thing = nil)
       return nil unless thing.present?
       result = self.ensure(thing)
-      raise ::ActiveRecord::RecordNotFound.new("#{self} not found") unless result
+      raise ActiveRecord::RecordNotFound, "#{self} not found" unless result
       result
     end
-
   end
 end

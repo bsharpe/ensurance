@@ -9,21 +9,21 @@ module Ensurance
     end
 
     module ClassMethods
-      DATE_ENSURE_FORMATS = %w|%m/%d/%Y %Y/%m/%d|.freeze
+      DATE_ENSURE_FORMATS = %w[%m/%d/%Y %Y/%m/%d].freeze
       def ensure(thing)
         case thing.class.name
-        when "NilClass"
+        when 'NilClass'
           nil
-        when "Integer","Float"
+        when 'Integer', 'Float'
           Time.ensure(thing).to_date
-        when "Date"
+        when 'Date'
           thing
-        when "String"
+        when 'String'
           if thing.to_i.to_s == thing
             ::Time.at(thing.to_i).to_date
           elsif thing.to_f.to_s == thing
             ::Time.at(thing.to_f).to_date
-          elsif thing.index("/")
+          elsif thing.index('/')
             # Assume US Date format
             result = nil
             DATE_ENSURE_FORMATS.each do |f|
@@ -33,7 +33,7 @@ module Ensurance
               rescue ArgumentError
               end
             end
-            raise ArgumentError.new("Bad Date: #{thing}".yellow) unless result
+            raise ArgumentError, "Bad Date: #{thing}".yellow unless result
             result
           else
             ::Date.parse(thing)
@@ -42,7 +42,7 @@ module Ensurance
           if thing.respond_to?(:to_date)
             thing.to_date
           else
-            raise ArgumentError.new("Unknown Type for Date to ensure: #{thing.class.name}")
+            raise ArgumentError, "Unknown Type for Date to ensure: #{thing.class.name}"
           end
         end
       end
