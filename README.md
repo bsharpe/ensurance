@@ -54,20 +54,20 @@ In this way you can call it with a User object, or a user `id` and it works just
 Also adds ensurance features to `Hash`, `Time`, and `Date`
 
 ```
+Time.ensure(nil) -> nil
 Time.ensure(Date.today) -> Date.today.beginning_of_day
 Time.ensure(1509556285) -> 2017-11-01 11:11:25 -0600
 Time.ensure("1509556285") -> 2017-11-01 11:11:25 -0600
 Time.ensure(DateTime.now) -> DateTime.now.to_time
-Time.ensure(nil) -> nil
 Time.ensure(1..4) -> ArgumentError "Unhandled Type for Time to ensure: Range"
 
-Date.ensure(Date.today) -> Date.today
 Date.ensure(nil) -> nil
+Date.ensure(Date.today) -> Date.today
 Date.ensure(1509556285) -> 2017-11-01
 
+Hash.ensure(nil) -> nil
 Hash.ensure(<aHash>) -> <aHash>
 Hash.ensure(<json_string>) -> Hash
-Hash.ensure(nil) -> nil
 Hash.ensure(<an array>) -> <an array>.to_h
 
 Array.ensure(nil) -> nil
@@ -88,14 +88,14 @@ class User < ApplicationRecord
   ensure_by :id, :token    <- totally optional (:id is the default)
 end
 
+User.ensure(nil) -> nil
+User.ensure!(nil) -> nil
 User.ensure!(1) == User.find(1)
 User.ensure(1) == User.find_by_id(1)
 User.ensure(<a user record>) -> <a user record> (nothing happens)
 User.ensure(<globalid>) == GlobalID::Locator.locate(<globalid>)
 User.ensure(<globalid string>) == GlobalID::Locator.locate(<globalid string>)
 User.ensure(<some token>) == User.where(token: <some token>).first
-User.ensure(nil) -> nil
-User.ensure!(nil) -> nil
 User.ensure!(<unknown_id>) -> ActiveRecord::RecordNotFound
 ```
 
