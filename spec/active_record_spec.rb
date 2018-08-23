@@ -1,5 +1,6 @@
 require 'active_record'
 require 'globalid'
+require 'awesome_print'
 
 GlobalID.app = :test
 
@@ -76,10 +77,13 @@ RSpec.describe Ensurance do
   it "ensures by a VALID hash" do
     value = { id: 2 }
     expect(TestRecord.ensure(value)).to be_a(TestRecord)
+
     value = { "id" => 2 }
     expect(TestRecord.ensure(value)).to be_a(TestRecord)
+
     value = { "parent_type" => "b" }
     expect(TestRecord.ensure(value)).to be_a(TestRecord)
+
     value = { parent_type: "b"}
     expect(TestRecord.ensure(value)).to be_a(TestRecord)
   end
@@ -89,9 +93,9 @@ RSpec.describe Ensurance do
     expect(TestRecord.ensure(value)).to be_nil
   end
 
-  it "fails to ensure with an array" do
+  it "succeeds with an array" do
     value = [1,2,3]
-    expect{TestRecord.ensure(value)}.to raise_error(::ArgumentError)
+    expect(TestRecord.ensure(value).size).to eq(3)
   end
 
   it "ensures by a parent_type" do
@@ -105,6 +109,5 @@ RSpec.describe Ensurance do
     value = "z"
     expect{ TestRecord.ensure!(value) }.to raise_error(ActiveRecord::RecordNotFound)
   end
-
 
 end

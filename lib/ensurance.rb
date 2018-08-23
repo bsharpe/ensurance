@@ -4,6 +4,7 @@ require 'active_support'
 require 'ensurance/date_ensure'
 require 'ensurance/time_ensure'
 require 'ensurance/hash_ensure'
+require 'ensurance/array_ensure'
 
 module Ensurance
   extend ActiveSupport::Concern
@@ -30,7 +31,7 @@ module Ensurance
       @_ensure_by ||= [@_additional_ensure_by || self.primary_key].flatten.compact.uniq
 
       found = []
-      things = Array(thing)
+      things = [thing].flatten
       things.each do |thing|
         record = nil
         @_ensure_by.each do |ensure_field|
@@ -52,7 +53,6 @@ module Ensurance
         found << record
       end
       found.compact!
-
 
       thing.is_a?(Array) ? found : found.first
     end
