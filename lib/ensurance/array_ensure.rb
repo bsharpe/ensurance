@@ -17,7 +17,7 @@ module Ensurance
           thing.to_a
         when 'String'
           begin
-            JSON.parse(thing).to_a
+            [JSON.parse(thing)].flatten
           rescue JSON::ParserError
             thing.split(',')
           end

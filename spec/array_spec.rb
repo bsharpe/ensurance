@@ -26,4 +26,9 @@ RSpec.describe ::Array do
     value = 1
     expect(described_class.ensure(value)).to eq([1])
   end
+
+  it 'returns Array for a Single String' do
+    value = "204"
+    expect(described_class.ensure(value)).to eq([204])
+  end
 end
