@@ -41,7 +41,8 @@ module Ensurance
           end
           if ensure_field.to_sym == :id
             begin
-              record = find(value)
+              # Always return the most recent record that matches
+              record = where(ensure_field => value).order(created_at: :desc).first
             rescue ActiveRecord::RecordNotFound
               nil
             end

@@ -90,7 +90,7 @@ You can specify another field or fields to ensure by doing the following:
 class User < ApplicationRecord
   include Ensurance
 
-  ensure_by :id, :token    <- totally optional (:id is the default)
+  ensure_by :token, :id    <- totally optional (:id is the default)
 end
 
 User.ensure(nil) -> nil
@@ -103,6 +103,11 @@ User.ensure(<globalid string>) == GlobalID::Locator.locate(<globalid string>)
 User.ensure(<some token>) == User.where(token: <some token>).first
 User.ensure!(<unknown_id>) -> ActiveRecord::RecordNotFound
 ```
+
+#### Note:
+- They are checked in the order you provide them. (`token` first, then `id`)
+- if using something other than a unique field, it returns the most recently created_one (using `created_at`)
+
 
 ## Contributing
 
