@@ -10,9 +10,16 @@ module Ensurance
   extend ActiveSupport::Concern
 
   class_methods do
-    def ensure_by(*args)
+    @_additional_ensure_by = []
+    @_ensure_order = nil
+    @_ensure_by = []
+
+    def ensure_by(*args, order: nil)
       @_additional_ensure_by = args
-      @_ensure_by = nil
+      @_ensure_order = (order || primary_key).to_s
+      @_ensure_by = [@_additional_ensure_by || primary_key].flatten.compact.uniq
+      # ap "Ensure By: #{self}.#{@_ensure_by}   Order: #{self}.#{@_ensure_order}"
+      raise ArgumentError.new("#{self} does not have column[#{@_ensure_order}] to sort by") unless self.column_names.include?(@_ensure_order)
     end
 
     def ensure(thing = nil)
@@ -29,6 +36,7 @@ module Ensurance
       end
 
       @_ensure_by ||= [@_additional_ensure_by || primary_key].flatten.compact.uniq
+      @_ensure_order ||= primary_key
 
       found = []
       things = [thing].flatten
@@ -42,7 +50,9 @@ module Ensurance
           if ensure_field.to_sym == :id
             begin
               # Always return the most recent record that matches
-              record = where(ensure_field => value).order(created_at: :desc).first
+              query = where(ensure_field => value)
+              query = query.order("#{@_ensure_order}" => 'desc')
+              record = query.first
             rescue ActiveRecord::RecordNotFound
               nil
             end

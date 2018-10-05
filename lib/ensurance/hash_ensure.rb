@@ -12,12 +12,12 @@ module Ensurance
     module ClassMethods
       def ensure(thing)
         case thing.class.name
+        when 'NilClass'
+          nil
         when 'Hash', 'HashWithIndifferentAccess'
           thing
         when 'String'
           JSON.parse(thing)
-        when 'NilClass'
-          nil
         when 'ActionController::UnfilteredParameters', 'ActionController::Parameters'
           thing.permit!.to_h
         else
