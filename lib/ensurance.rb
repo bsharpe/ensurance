@@ -19,7 +19,6 @@ module Ensurance
       @_ensure_order = (order || primary_key).to_s
       @_ensure_by = [@_additional_ensure_by || primary_key].flatten.compact.uniq
       # ap "Ensure By: #{self}.#{@_ensure_by}   Order: #{self}.#{@_ensure_order}"
-      raise ArgumentError.new("#{self} does not have column[#{@_ensure_order}] to sort by") unless self.column_names.include?(@_ensure_order)
     end
 
     def ensure(thing = nil)
