@@ -16,8 +16,10 @@ module Ensurance
 
     def ensure_by(*args, order: nil)
       @_additional_ensure_by = args
-      @_ensure_order = (order || primary_key).to_s
-      @_ensure_by = [@_additional_ensure_by || primary_key].flatten.compact.uniq
+      if (::ActiveRecord::Base.connection rescue false)
+        @_ensure_order = (order || primary_key).to_s
+        @_ensure_by = [@_additional_ensure_by || primary_key].flatten.compact.uniq
+      end
       # ap "Ensure By: #{self}.#{@_ensure_by}   Order: #{self}.#{@_ensure_order}"
     end
 
