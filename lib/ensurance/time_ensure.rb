@@ -1,4 +1,5 @@
 require 'active_support/core_ext/time'
+require 'active_support/time_with_zone'
 
 # NOTE: https://blog.daveallie.com/clean-monkey-patching/
 
@@ -10,6 +11,8 @@ module Ensurance
 
     module ClassMethods
       def ensure(thing)
+        ::Time.zone ||= "UTC"
+
         case thing.class.name
         when 'NilClass'
           thing
@@ -18,14 +21,14 @@ module Ensurance
         when 'Date'
           thing.beginning_of_day
         when 'Integer', 'Float'
-          ::Time.at(thing)
+          ::Time.zone.at(thing)
         when 'String'
           if thing.to_i.to_s == thing
-            ::Time.at(thing.to_i)
+            ::Time.zone.at(thing.to_i)
           elsif thing.to_f.to_s == thing
-            ::Time.at(thing.to_f)
+            ::Time.zone.at(thing.to_f)
           else
-            ::Time.parse(thing)
+            ::Time.zone.parse(thing)
           end
         else
           if thing.respond_to?(:to_time)

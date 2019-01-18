@@ -1,6 +1,10 @@
 require 'ensurance/date_ensure'
 
 RSpec.describe ::Date do
+  before do
+    Time.zone = 'Eastern Time (US & Canada)'
+  end
+
   it 'returns nil for nil' do
     expect(described_class.ensure(nil)).to eq(nil)
   end

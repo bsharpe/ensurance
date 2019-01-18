@@ -1,6 +1,7 @@
 # NOTE: https://blog.daveallie.com/clean-monkey-patching/
 
 require 'active_support/core_ext/date'
+require 'active_support/core_ext/time'
 
 module Ensurance
   module DateEnsure
@@ -11,6 +12,8 @@ module Ensurance
     module ClassMethods
       DATE_ENSURE_FORMATS = %w[%m/%d/%Y %Y/%m/%d].freeze
       def ensure(thing)
+        Time.zone ||= 'UTC'
+
         case thing.class.name
         when 'NilClass'
           nil
@@ -20,9 +23,9 @@ module Ensurance
           thing
         when 'String'
           if thing.to_i.to_s == thing
-            ::Time.at(thing.to_i).to_date
+            ::Time.zone.at(thing.to_i).to_date
           elsif thing.to_f.to_s == thing
-            ::Time.at(thing.to_f).to_date
+            ::Time.zone.at(thing.to_f).to_date
           elsif thing.index('/')
             # Assume US Date format
             result = nil
@@ -36,7 +39,7 @@ module Ensurance
             raise ArgumentError, "Bad Date: #{thing}".yellow unless result
             result
           else
-            ::Date.parse(thing)
+            ::Time.zone.parse(thing).to_date
           end
         else
           if thing.respond_to?(:to_date)
