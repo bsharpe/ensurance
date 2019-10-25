@@ -9,6 +9,10 @@ RSpec.describe ::Time do
     expect(described_class.ensure(nil)).to eq(nil)
   end
 
+  it 'returns nil for empty string' do
+    expect(described_class.ensure(' ')).to eq(nil)
+  end
+
   it 'returns Time for Time' do
     expect(described_class.ensure(Time.now)).to be_a(Time)
   end

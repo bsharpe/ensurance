@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ensurance (0.1.20)
+    ensurance (0.1.21)
       activesupport (>= 3, <= 6)
 
 GEM

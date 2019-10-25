@@ -9,6 +9,10 @@ RSpec.describe ::Date do
     expect(described_class.ensure(nil)).to eq(nil)
   end
 
+  it 'returns nil for empty string' do
+    expect(described_class.ensure(' ')).to eq(nil)
+  end
+
   it 'returns Date for Time' do
     expect(described_class.ensure(Time.now)).to be_a(Date)
   end

@@ -22,6 +22,7 @@ module Ensurance
         when 'Date'
           thing
         when 'String'
+          return nil if thing.blank?
           if thing.to_i.to_s == thing
             ::Time.zone.at(thing.to_i).to_date
           elsif thing.to_f.to_s == thing
