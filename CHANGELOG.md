@@ -1,7 +1,11 @@
 # Changelog
 
+## 1.0.22
+- support Rails 6+
+
 ## 1.0.21
-- support 
+- properly handle empty strings 
+
 ## 1.0.20
 - support Rails 6
 
