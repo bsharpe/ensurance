@@ -17,7 +17,7 @@ module Ensurance
     def ensure_by(*args, order: nil)
       @_additional_ensure_by = args
       if (::ActiveRecord::Base.connection rescue false)
-        @_ensure_order = (order || primary_key).to_s
+        @_ensure_order = (order || self.primary_key).to_s
         @_ensure_by = [@_additional_ensure_by || primary_key].flatten.compact.uniq
       end
       # ap "Ensure By: #{self}.#{@_ensure_by}   Order: #{self}.#{@_ensure_order}"
@@ -36,7 +36,7 @@ module Ensurance
         return found
       end
 
-      @_ensure_by ||= [@_additional_ensure_by || primary_key].flatten.compact.uniq
+      @_ensure_by ||= [@_additional_ensure_by || self.primary_key].flatten.compact.uniq
       @_ensure_order ||= primary_key
 
       found = []
@@ -60,7 +60,8 @@ module Ensurance
           else
             record = find_by(ensure_field => value) if value.present? && !value.is_a?(Hash)
           end
-          break if record.is_a?(self)
+          record = nil if record&.__send__(ensure_field) != value
+          break if record
         end
         found << record
       end

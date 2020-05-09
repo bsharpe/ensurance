@@ -11,6 +11,13 @@ class TestRecord < ActiveRecord::Base
   ensure_by :parent_type, :id
 end
 
+class UuidRecord < ActiveRecord::Base
+  include Ensurance
+
+  # It's important that non-id columns come before the id column
+  ensure_by :uuid, :id
+end
+
 RSpec.describe Ensurance do
   before(:all) do
     # Setup tables in sqlite mem
@@ -35,10 +42,19 @@ RSpec.describe Ensurance do
       t.column :state, :integer
     end
 
+      # AR caches columns options like defaults etc. Clear them!
+    ActiveRecord::Base.connection.create_table :uuid_records do |t|
+      t.column :uuid, :uuid
+    end
+
     parent_types = %w[a b c d e f]
     5.times do |value|
       TestRecord.create(parent_type: parent_types[value])
     end
+
+    # It's important that a non-digit starts the uuid of the first record
+    UuidRecord.create(uuid: "c69c60ac-bfd1-4832-b8a7-cc2b60306368")
+    UuidRecord.create(uuid: "1a7ebd41-4856-44cb-867c-47a07c473fc4")
   end
 
   after(:all) do
@@ -57,6 +73,21 @@ RSpec.describe Ensurance do
   it 'ensures by record_id' do
     value = 3
     expect(TestRecord.ensure(value)).to be_a(TestRecord)
+  end
+
+  it 'ensures by uuid first' do
+    value = "1a7ebd41-4856-44cb-867c-47a07c473fc4"
+    expect(UuidRecord.ensure(value).uuid).to eq(value)
+  end
+
+  it 'ensures that a non-matching uuid doesnt return a bad record' do
+    value = "1c0ffee-4856-44cb-867c-47a07c473fc4"
+    expect(UuidRecord.ensure(value)).to eq(nil)
+  end
+
+  it 'ensures by id second' do
+    value = 1
+    expect(UuidRecord.ensure(value).uuid).to eq("c69c60ac-bfd1-4832-b8a7-cc2b60306368")
   end
 
   it 'ensures by full_record' do
