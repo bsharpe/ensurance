@@ -60,7 +60,7 @@ module Ensurance
           else
             record = find_by(ensure_field => value) if value.present? && !value.is_a?(Hash)
           end
-          record = nil if record&.__send__(ensure_field) != value
+          record = nil if record&.__send__(ensure_field).to_s != value.to_s
           break if record
         end
         found << record
