@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 1.0.26
+- auto handle milli and microseconds integers sent to Time.ensure
+
 ## 1.0.25
 - have to use a string comparison for final result `1 != "1"`
 

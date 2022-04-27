@@ -21,10 +21,14 @@ module Ensurance
         when 'Date'
           thing.beginning_of_day
         when 'Integer', 'Float'
+          if thing.to_i.to_s == thing.to_s
+            dec = thing.to_s.size - 10
+            thing /= (10 ** dec).to_f if dec > 0
+          end
           ::Time.zone.at(thing)
         when 'String'
           if thing.to_i.to_s == thing
-            ::Time.zone.at(thing.to_i)
+            ::Time.ensure(thing.to_i)
           elsif thing.to_f.to_s == thing
             ::Time.zone.at(thing.to_f)
           else

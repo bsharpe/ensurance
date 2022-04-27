@@ -19,12 +19,30 @@ RSpec.describe ::Time do
 
   it 'returns Time for Int' do
     value = Time.now.to_i
-    expect(described_class.ensure(value)).to be_a(Time)
+    result = described_class.ensure(value)
+    expect(result).to be_a(Time)
+    expect(result.year).to eq(Time.now.year)
+  end
+
+  it 'returns Time for Millisecond Int' do
+    value = (Time.now.to_f * 1000).to_i
+    result = described_class.ensure(value)
+    expect(result).to be_a(Time)
+    expect(result.year).to eq(Time.now.year)
+  end
+
+  it 'returns Time for Microsecond Int' do
+    value = (Time.now.to_f * 1000000000).to_i
+    result = described_class.ensure(value)
+    expect(result).to be_a(Time)
+    expect(result.year).to eq(Time.now.year)
   end
 
   it 'returns Time for Float' do
     value = Time.now.to_f
-    expect(described_class.ensure(value)).to be_a(Time)
+    result = described_class.ensure(value)
+    expect(result).to be_a(Time)
+    expect(result.year).to eq(Time.now.year)
   end
 
   it 'returns Time for Date' do
@@ -33,22 +51,44 @@ RSpec.describe ::Time do
 
   it 'returns Time for full time String' do
     str = Time.now.to_s
-    expect(described_class.ensure(str)).to be_a(Time)
+    result = described_class.ensure(str)
+    expect(result).to be_a(Time)
+    expect(result.year).to eq(Time.now.year)
   end
 
   it 'returns Time for time-as-int String' do
     str = Time.now.to_i.to_s
-    expect(described_class.ensure(str)).to be_a(Time)
+    result = described_class.ensure(str)
+    expect(result).to be_a(Time)
+    expect(result.year).to eq(Time.now.year)
+  end
+
+  it 'returns Time for millisecond-as-int String' do
+    str = (Time.now.to_f * 1000).to_i.to_s
+    result = described_class.ensure(str)
+    expect(result).to be_a(Time)
+    expect(result.year).to eq(Time.now.year)
+  end
+
+  it 'returns Time for microsecond-as-int String' do
+    str = (Time.now.to_f * 1000000).to_i.to_s
+    result = described_class.ensure(str)
+    expect(result).to be_a(Time)
+    expect(result.year).to eq(Time.now.year)
   end
 
   it 'returns Time for time-as-float String' do
     str = Time.now.to_f.to_s
-    expect(described_class.ensure(str)).to be_a(Time)
+    result = described_class.ensure(str)
+    expect(result).to be_a(Time)
+    expect(result.year).to eq(Time.now.year)
   end
 
   it 'returns Time for a DateTime' do
     value = DateTime.now
-    expect(described_class.ensure(value)).to be_a(Time)
+    result = described_class.ensure(value)
+    expect(result).to be_a(Time)
+    expect(result.year).to eq(Time.now.year)
   end
 
   it 'errors if object cannot be cast to a Time' do
