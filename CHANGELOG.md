@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.27
+- cleanup Time.ensure
+
+## 1.0.26
+- add handling of milliseconds to Time.ensure
+
 ## 1.0.25
 - have to use a string comparison for final result `1 != "1"`
 
